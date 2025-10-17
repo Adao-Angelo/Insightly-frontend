@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { FormField } from "@/components/ui/formField";
 import { authAPI } from "@/lib/api/endpoints";
 import { useAuthStore } from "@/lib/store/auth-store";
+import { isAxiosError } from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormProvider, useForm } from "react-hook-form";
@@ -37,9 +38,13 @@ export default function LoginPage() {
 
       login(access_token, user);
       router.push("/dashboard");
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const message =
+        isAxiosError(err) && err.response?.data?.message
+          ? String(err.response.data.message)
+          : "Login failed";
       methods.setError("root", {
-        message: err.response?.data?.message || "Login failed",
+        message,
       });
     }
   };
@@ -104,7 +109,7 @@ export default function LoginPage() {
 
             <div className="text-content-secondary flex justify-center mt-6 sm:mt-8">
               <p className="text-sm sm:text-base text-center">
-                Don't have an account?{" "}
+                Don&apos;t have an account?{" "}
                 <Link
                   href="/auth/register"
                   className="text-content-primary font-bold hover:underline"

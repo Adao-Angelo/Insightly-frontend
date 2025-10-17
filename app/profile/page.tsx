@@ -5,7 +5,9 @@ import { FormField } from "@/components/ui/formField";
 import { Textarea } from "@/components/ui/textarea";
 import { userAPI } from "@/lib/api/endpoints";
 import { useAuthStore } from "@/lib/store/auth-store";
+import { isAxiosError } from "axios";
 import { X } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -47,19 +49,19 @@ export default function ProfilePage() {
 
   const onSubmit = async (data: ProfileFormData) => {
     try {
-      const { email, password, ...profileData } = data;
+      const { email: _email, password: _password, ...profileData } = data;
 
-      console.log("Profile updated:", profileData);
       await userAPI.updateProfile(profileData);
 
       toast.success("Profile updated successfully!");
 
       methods.reset(profileData);
-    } catch (err: any) {
-      toast.error(
-        err?.response?.data?.message ||
-          "Failed to update profile. Please try again."
-      );
+    } catch (err: unknown) {
+      const message =
+        isAxiosError(err) && err.response?.data?.message
+          ? String(err.response.data.message)
+          : "Failed to update profile. Please try again.";
+      toast.error(message);
     }
   };
 
@@ -79,10 +81,6 @@ export default function ProfilePage() {
   const handleRemoveAvatar = () => {
     setAvatarPreview("");
     setValue("avatar", "", { shouldDirty: true });
-  };
-
-  const handleBack = () => {
-    router.back();
   };
 
   return (
@@ -132,9 +130,11 @@ export default function ProfilePage() {
                 <div className="relative">
                   <div className="w-24 h-24 rounded-xl bg-background-secondary border-1 border-background-secondary flex items-center justify-center overflow-hidden">
                     {avatarPreview || currentAvatar ? (
-                      <img
+                      <Image
                         src={avatarPreview || currentAvatar}
                         alt="Avatar"
+                        width={96}
+                        height={96}
                         className="w-full h-full object-cover"
                       />
                     ) : (
@@ -198,7 +198,7 @@ export default function ProfilePage() {
                     </label>
                     <input
                       type="email"
-                      value={methods.getValues("email")}
+                      value={methods.getValues("email") || ""}
                       className="w-full px-3 py-2 cursor-not-allowed"
                       readOnly
                       disabled

@@ -5,10 +5,22 @@ import { feedbackAPI } from "@/lib/api/endpoints";
 import { useQuery } from "@tanstack/react-query";
 import { MessageSquare } from "lucide-react";
 
+interface FeedbackItem {
+  id: string;
+  content: string;
+  createdAt: string;
+  isPublic: boolean;
+}
+
+interface FeedbackResponse {
+  data: FeedbackItem[];
+}
+
 export function FeedbackList() {
-  const { data: feedbacks, isLoading } = useQuery({
+  const { data: feedbacks, isLoading } = useQuery<FeedbackResponse>({
     queryKey: ["feedbacks"],
-    queryFn: () => feedbackAPI.getMyFeedbacks().then((res) => res.data),
+    queryFn: () =>
+      feedbackAPI.getMyFeedbacks().then((res) => res.data as FeedbackResponse),
   });
 
   if (isLoading) {
@@ -39,7 +51,7 @@ export function FeedbackList() {
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          {feedbacks?.data?.map((feedback: any) => (
+          {feedbacks?.data?.map((feedback) => (
             <div
               key={feedback.id}
               className="p-4 rounded-xl bg-background-secondary transition-colors"

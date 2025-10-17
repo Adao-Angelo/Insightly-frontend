@@ -28,7 +28,10 @@ function LinkModal({
   onSubmit: (data: { title: string; url: string }) => void;
   isLoading: boolean;
 }) {
-  const [formData, setFormData] = useState({ title: "", url: "" });
+  const [formData, setFormData] = useState<{ title: string; url: string }>({
+    title: "",
+    url: "",
+  });
 
   useEffect(() => {
     if (isOpen) {
@@ -40,7 +43,7 @@ function LinkModal({
     }
   }, [isOpen, editingLink]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (formData.title && formData.url) {
       onSubmit(formData);
@@ -137,39 +140,41 @@ export function LinksManager() {
   const [editingLink, setEditingLink] = useState<Link | null>(null);
   const queryClient = useQueryClient();
 
-  const { data: links, isLoading } = useQuery({
+  const { data: links, isLoading } = useQuery<Link[]>({
     queryKey: ["links"],
-    queryFn: () => linksAPI.getMyLinks().then((res) => res.data),
+    queryFn: () => linksAPI.getMyLinks().then((res) => res.data as Link[]),
   });
 
+  type LinkPayload = { title: string; url: string };
+
   const createMutation = useMutation({
-    mutationFn: (data: any) => linksAPI.createLink(data),
+    mutationFn: (data: LinkPayload) => linksAPI.createLink(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["links"] });
       closeModal();
       toast.success("Link created successfully!");
     },
-    onError: (err: any) => {
-      toast.error(
-        err?.response?.data?.message ||
-          "Failed to create link. Please try again."
-      );
+    onError: (err: unknown) => {
+      const message =
+        (err as { response?: { data?: { message?: string } } })?.response?.data
+          ?.message || "Failed to create link. Please try again.";
+      toast.error(message);
     },
   });
 
   const updateMutation = useMutation({
-    mutationFn: ({ id, data }: { id: string; data: any }) =>
+    mutationFn: ({ id, data }: { id: string; data: LinkPayload }) =>
       linksAPI.updateLink(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["links"] });
       closeModal();
       toast.success("Link updated successfully!");
     },
-    onError: (err: any) => {
-      toast.error(
-        err?.response?.data?.message ||
-          "Failed to update link. Please try again."
-      );
+    onError: (err: unknown) => {
+      const message =
+        (err as { response?: { data?: { message?: string } } })?.response?.data
+          ?.message || "Failed to update link. Please try again.";
+      toast.error(message);
     },
   });
 
@@ -179,11 +184,11 @@ export function LinksManager() {
       queryClient.invalidateQueries({ queryKey: ["links"] });
       toast.success("Link deleted successfully!");
     },
-    onError: (err: any) => {
-      toast.error(
-        err?.response?.data?.message ||
-          "Failed to delete link. Please try again."
-      );
+    onError: (err: unknown) => {
+      const message =
+        (err as { response?: { data?: { message?: string } } })?.response?.data
+          ?.message || "Failed to delete link. Please try again.";
+      toast.error(message);
     },
   });
 
@@ -202,7 +207,7 @@ export function LinksManager() {
     setEditingLink(null);
   };
 
-  const handleSubmit = (formData: { title: string; url: string }) => {
+  const handleSubmit = (formData: LinkPayload) => {
     if (editingLink) {
       updateMutation.mutate({ id: editingLink.id, data: formData });
     } else {
@@ -242,7 +247,7 @@ export function LinksManager() {
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
-            {links?.map((link: Link) => (
+            {links?.map((link) => (
               <div
                 key={link.id}
                 className="flex items-center justify-between p-4 bg-background-tertiary rounded-xl border border-background-tertiary  transition-colors"

@@ -7,9 +7,21 @@ import Link from "next/link";
 import { useState } from "react";
 import { Textarea } from "../ui/textarea";
 
+interface PublicUser {
+  username: string;
+  name: string;
+  bio?: string;
+}
+
+interface PublicLink {
+  id: string;
+  title: string;
+  url: string;
+}
+
 interface PublicProfileProps {
-  user: any;
-  links: any[];
+  user: PublicUser;
+  links: PublicLink[];
 }
 
 export function PublicProfile({ user, links }: PublicProfileProps) {
@@ -17,7 +29,7 @@ export function PublicProfile({ user, links }: PublicProfileProps) {
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
-  const handleSubmitFeedback = async (e: React.FormEvent) => {
+  const handleSubmitFeedback = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!feedback.trim() || feedback.length < 10) return;
 
@@ -107,7 +119,9 @@ export function PublicProfile({ user, links }: PublicProfileProps) {
             <form onSubmit={handleSubmitFeedback}>
               <Textarea
                 value={feedback}
-                onChange={(e) => setFeedback(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                  setFeedback(e.target.value)
+                }
                 placeholder="Share your thoughts... (minimum 10 characters)"
                 className="w-full h-32 p-3  rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-primary-500"
                 minLength={10}

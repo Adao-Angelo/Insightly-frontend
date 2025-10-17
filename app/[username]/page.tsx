@@ -1,5 +1,5 @@
 import { PublicProfile } from "@/components/public/profile";
-import { linksAPI, userAPI } from "@/lib/api/endpoints";
+import { LinkItem, linksAPI, userAPI, UserProfile } from "@/lib/api/endpoints";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 
@@ -16,11 +16,11 @@ export default async function PublicProfilePage({ params }: PageProps) {
       linksAPI.getPublicLinks(params.username),
     ]);
 
-    const user = userResponse.data;
-    const links = linksResponse.data;
+    const user = userResponse.data as UserProfile;
+    const links = linksResponse.data as LinkItem[];
 
     return <PublicProfile user={user} links={links} />;
-  } catch (error) {
+  } catch {
     notFound();
   }
 }
@@ -30,13 +30,13 @@ export async function generateMetadata({
 }: PageProps): Promise<Metadata> {
   try {
     const response = await userAPI.getPublicProfile(params.username);
-    const user = response.data;
+    const user = response.data as UserProfile;
 
     return {
       title: `${user.name} - Insightly`,
       description: user.bio || `Connect with ${user.name} on Insightly`,
     };
-  } catch (error) {
+  } catch {
     return {
       title: "Profile Not Found - Insightly",
     };
