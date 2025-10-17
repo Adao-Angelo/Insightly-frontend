@@ -15,6 +15,81 @@ interface Link {
   url: string;
 }
 
+function DeleteConfirmToast({
+  t,
+  linkTitle,
+  onConfirm,
+  onCancel,
+}: {
+  t: any;
+  linkTitle: string;
+  onConfirm: () => void;
+  onCancel: () => void;
+}) {
+  return (
+    <div
+      className={`${
+        t.visible ? "animate-enter" : "animate-leave"
+      } max-w-md w-full bg-background-secondary shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-background-tertiary border border-background-tertiary`}
+    >
+      <div className="flex-1 w-0 p-4">
+        <div className="flex items-start">
+          <div className="flex-shrink-0 pt-0.5">
+            <div className="w-10 h-10 bg-accent-red/20 rounded-full flex items-center justify-center">
+              <Trash2 className="h-5 w-5 text-accent-red" />
+            </div>
+          </div>
+          <div className="ml-3 flex-1">
+            <p className="text-sm font-medium text-content-primary">
+              Delete Link
+            </p>
+            <p className="mt-1 text-sm text-content-secondary">
+              Are you sure you want to delete "{linkTitle}"? This action cannot
+              be undone.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div className="flex border-l border-background-tertiary">
+        <div className="flex flex-col">
+          <button
+            onClick={onConfirm}
+            className="flex-1 border border-transparent rounded-none rounded-tr-lg p-4 flex items-center justify-center text-sm font-medium text-accent-red hover:bg-accent-red/10 focus:outline-none focus:ring-2 focus:ring-accent-red transition-colors"
+          >
+            Delete
+          </button>
+          <button
+            onClick={onCancel}
+            className="flex-1 border-t border-background-tertiary rounded-none rounded-br-lg p-4 flex items-center justify-center text-sm font-medium text-content-primary hover:bg-background-tertiary focus:outline-none focus:ring-2 focus:ring-accent-orange transition-colors"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+const showDeleteConfirm = (linkTitle: string, onConfirm: () => void) => {
+  toast.custom(
+    (t) => (
+      <DeleteConfirmToast
+        t={t}
+        linkTitle={linkTitle}
+        onConfirm={() => {
+          onConfirm();
+          toast.dismiss(t.id);
+        }}
+        onCancel={() => toast.dismiss(t.id)}
+      />
+    ),
+    {
+      duration: Infinity,
+      position: "top-center",
+    }
+  );
+};
+
 function LinkModal({
   isOpen,
   onClose,
@@ -215,6 +290,12 @@ export function LinksManager() {
     }
   };
 
+  const handleDeleteLink = (link: Link) => {
+    showDeleteConfirm(link.title, () => {
+      deleteMutation.mutate(link.id);
+    });
+  };
+
   if (isLoading) {
     return (
       <div>
@@ -276,13 +357,7 @@ export function LinksManager() {
                   </Button>
                   <Button
                     size="sm"
-                    onClick={() => {
-                      if (
-                        confirm("Are you sure you want to delete this link?")
-                      ) {
-                        deleteMutation.mutate(link.id);
-                      }
-                    }}
+                    onClick={() => handleDeleteLink(link)}
                     disabled={deleteMutation.isPending}
                     variant="secondary"
                   >
@@ -317,5 +392,3 @@ export function LinksManager() {
     </>
   );
 }
-
-//https://neon.com/
