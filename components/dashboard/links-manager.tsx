@@ -21,7 +21,7 @@ function DeleteConfirmToast({
   onConfirm,
   onCancel,
 }: {
-  t: any;
+  t: { visible: boolean; id: string };
   linkTitle: string;
   onConfirm: () => void;
   onCancel: () => void;
@@ -44,8 +44,8 @@ function DeleteConfirmToast({
               Delete Link
             </p>
             <p className="mt-1 text-sm text-content-secondary">
-              Are you sure you want to delete "{linkTitle}"? This action cannot
-              be undone.
+              Are you sure you want to delete {linkTitle}? This action cannot be
+              undone.
             </p>
           </div>
         </div>
