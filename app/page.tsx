@@ -1,103 +1,90 @@
-import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import { ArrowRight, Link2, MessageSquare, Users } from "lucide-react";
+import Link from "next/link";
 
-export default function Home() {
+export default function HomePage() {
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <div className="container mx-auto px-4 py-16">
+      <section className="text-center py-20 mb-20">
+        <h1 className="text-5xl md:text-7xl font-bold text-content-primary mb-6">
+          <span className="text-3xl font-bold mb-8 border-accent-orange border-b-2 pb-2 w-fit">
+            Connect{" "}
+          </span>
+          with your
+          <span className="text-accent-orange"> audience</span>
+        </h1>
+        <p className="text-xl md:text-2xl text-content-secondary mb-8 max-w-3xl mx-auto">
+          Create your personalized link page, share all your content in one
+          place, and receive valuable anonymous feedback from your followers.
+        </p>
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <Link href="/auth/register">
+            <Button>
+              Get Started Free <ArrowRight className="ml-2 h-5 w-5" />
+            </Button>
+          </Link>
+          <Link href="/demo">
+            <Button variant="secondary">See Demo</Button>
+          </Link>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+      </section>
+
+      {/* Features Section */}
+      <section className="py-20 mb-20">
+        <div className="grid md:grid-cols-3 gap-8">
+          <div className="text-center p-6">
+            <div className=" bg-accent-orange/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Link2 className="h-8 w-8 text-accent-orange" />
+            </div>
+            <h3 className="text-xl font-semibold mb-2">
+              All Your Links in One Place
+            </h3>
+            <p className="text-content-secondary">
+              Share your social media, website, portfolio, and more with a
+              beautiful, customizable page.
+            </p>
+          </div>
+
+          <div className="text-center p-6">
+            <div className="bg-accent-orange/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+              <MessageSquare className="h-8 w-8 text-accent-orange" />
+            </div>
+            <h3 className="text-xl font-semibold mb-2">Anonymous Feedback</h3>
+            <p className="text-content-secondary">
+              Receive honest, anonymous feedback from your audience to improve
+              your content.
+            </p>
+          </div>
+
+          <div className="text-center p-6">
+            <div className="bg-accent-orange/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Users className="h-8 w-8 text-accent-orange" />
+            </div>
+            <h3 className="text-xl font-semibold mb-2">Grow Your Audience</h3>
+            <p className="text-content-secondary">
+              Optimize your online presence and build stronger connections with
+              your followers.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="text-center py-20 bg-background-secondary rounded-3xl shadow-sm">
+        <h2 className="text-3xl md:text-4xl font-bold mb-4">
+          Ready to elevate your online presence?
+        </h2>
+        <p className="text-content-secondary mb-8 max-w-2xl mx-auto">
+          Join thousands of creators who use Insightly to connect with their
+          audience and grow their brand.
+        </p>
+        <Link
+          href="/auth/register"
+          className=" px-8 py-4 rounded-lg font-semibold text-lg hover:bg-primary-700 transition-colors inline-flex items-center"
         >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+          <Button>Start Your Journey</Button>
+        </Link>
+      </section>
     </div>
   );
 }
