@@ -8,6 +8,7 @@ import { isAxiosError } from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormProvider, useForm } from "react-hook-form";
+import toast, { Toaster } from "react-hot-toast";
 
 interface RegisterFormData {
   name: string;
@@ -43,20 +44,29 @@ export default function RegisterPage() {
       const { access_token, user } = response.data;
 
       login(access_token, user);
+      toast.success("Registration successful!");
+
       router.push("/dashboard");
     } catch (err: unknown) {
       const message =
         isAxiosError(err) && err.response?.data?.message
           ? String(err.response.data.message)
-          : "Registration failed";
-      methods.setError("root", {
-        message,
-      });
+          : "Registration failed. Please try again.";
+      toast.error(message);
     }
   };
 
   return (
     <FormProvider {...methods}>
+      <Toaster
+        toastOptions={{
+          className: "bg-background-secondary text-content-primary",
+          style: {
+            background: "#181818",
+            color: "#dbd8d8",
+          },
+        }}
+      />
       <main className="flex flex-col lg:flex-row min-h-screen">
         <div className="hidden lg:block p-4 h-1/3 lg:h-screen w-full lg:w-1/2 rounded-b-2xl lg:rounded-r-2xl">
           <div className="bg-[url('/sun.png')] bg-cover bg-center h-full w-full rounded-2xl"></div>
