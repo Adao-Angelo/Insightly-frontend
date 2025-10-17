@@ -240,7 +240,7 @@ export function LinksManager() {
       <div>
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle className="text-content-primary">My Links</CardTitle>
-          <Button onClick={openCreateModal}>
+          <Button variant="secondary" onClick={openCreateModal}>
             <Plus className="h-4 w-4" />
             <span>Add Link</span>
           </Button>
@@ -298,16 +298,9 @@ export function LinksManager() {
                 <p className="text-lg font-medium mb-2 text-content-primary">
                   No links yet
                 </p>
-                <p className="text-sm mb-6">
+                <p className="text-sm mb-6 text-content-secondary">
                   Add your first link to get started!
                 </p>
-                <Button
-                  onClick={openCreateModal}
-                  className="bg-accent-orange hover:bg-accent-orange/90 text-content-inverse"
-                >
-                  <Plus className="h-4 w-4 mr-2" />
-                  Add Your First Link
-                </Button>
               </div>
             )}
           </div>
@@ -324,3 +317,5 @@ export function LinksManager() {
     </>
   );
 }
+
+//https://neon.com/
